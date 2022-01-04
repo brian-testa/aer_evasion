@@ -92,7 +92,8 @@ def dig_mix_to_file(filedict, key, perturbation, tempdir='/tmp/letstest4'):
 def main():
 
     if not (len(sys.argv) > 1 and os.path.exists(sys.argv[1])):
-        print(f"usage: {argv[0]} <path to config file>") 
+        print(sys.argv[1])
+        print(f"usage: {sys.argv[0]} <path to config file>") 
         sys.exit(1)
         
     config = json.load(open(sys.argv[1], 'r'))
@@ -154,6 +155,7 @@ def main():
         for sample_sz in [x for x in perturbations.keys() if len(sample_sz_strs) == 0 or x in sample_sz_strs]:
             for ae_str in [x for x in perturbations[sample_sz].keys() if len(autoencoder_keys) == 0 or x in autoencoder_keys]:
                 for trial_num in [x for x in perturbations[sample_sz][ae_str].keys() if len(trial_numbers) == 0 or x in trial_numbers]:
+                    print("++++++++++++++++++++++++++++++++++TRIAL #", trial_num)
                     for pop_indx in [x for x in perturbations[sample_sz][ae_str][trial_num].keys() if len(population_indices) == 0 or x in population_indices]:
                         for pert_indx in [x for x in perturbations[sample_sz][ae_str][trial_num][pop_indx].keys() if len(perturbation_indices) == 0 or x in perturbation_indices]:
                             for loudness in [x for x in perturbations[sample_sz][ae_str][trial_num][pop_indx][pert_indx].keys() if len(loudnesses) == 0 or x in loudnesses]:
@@ -168,6 +170,8 @@ def main():
         # Evaluate the perturbed audio files
         misc.resetTimer()
         dig_premix_results = {}
+        if os.path.exists(mix_eval_filename):
+            dig_premix_results = pickle.load(open(mix_eval_filename, 'rb'))
         
         classifier = classifiers.models["SIMPLE_RECORDED"]
         feature_extractor = classifiers.feature_extractors["SIMPLE_RECORDED"]

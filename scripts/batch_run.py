@@ -118,7 +118,7 @@ autoencoders = { "PURE": None,
 
 # Define some baseline perturbation characteristics; in general, should not change these between runs
 min_freq=100
-max_freq=8000
+max_freq=8000 
 min_duration=2.5
 max_duration=4.0
 min_offset=0.0 
@@ -320,13 +320,15 @@ def sample_run(runtime_str, sample_size, modality="PURE", dataset_str="ALL", aut
     global evaluation_dictionary
 
     # Initialize the dictionary used by the GP fitness evaluation method
-    evaluation_dictionary["Evaluation Sample Size"] = 20
+    evaluation_dictionary["Evaluation Sample Size"] = 40
     evaluation_dictionary["Original Transcription Confidences"] = valid_confidences[modality]
     evaluation_dictionary["Evaluation Autoencoder Key"] = autoencoder_key
     evaluation_dictionary["Evaluation Classifier Modality"] = modality
     evaluation_dictionary["Target Class"] = target_class
     evaluation_dictionary["Original Softmax Values"] = original_softmax_values[modality]
     evaluation_dictionary["Temporary Directory"] = f'/tmp/bpt_{runtime_str}'
+
+#    gp.initialize_gp_environment(fitness_function=evaluation)
 
     # Make sure that we need to do this run
     pop_pickle_fn = f"{jar}/populations_{runtime_str}_samplesize_{sample_size}.pickle"
@@ -336,7 +338,7 @@ def sample_run(runtime_str, sample_size, modality="PURE", dataset_str="ALL", aut
         populations = pickle.load(open(pop_pickle_fn, 'rb'))
         sample_dict = pickle.load(open(sample_pickle_fn, 'rb'))
     else:
-        sample = random.sample(list(sentence_ids(dataset_str)), sample_size)
+        sample = random.sample(list(sentence_ids[dataset_str]), sample_size)
         train_test_size = sample_size // 2
 
         train_sample = { sample_key:evasive_todo[modality][sample_key] for sample_key in evasive_todo[modality] \
@@ -352,7 +354,7 @@ def sample_run(runtime_str, sample_size, modality="PURE", dataset_str="ALL", aut
         evaluation_dictionary["Evaluation File List"] = train_sample
 
         populations, _ = gp.run_gp(starting_population=starting_population, number_of_generations=ngen)
-        pickle.dump(populations, open(pop_pickle_fn, 'wb'))
+        pickle.dump(list(populations), open(pop_pickle_fn, 'wb'))
 
     return populations, sample_dict
 
@@ -369,7 +371,7 @@ def simple_run(runtime_str, modality="PURE", dataset_str="ALL", autoencoder_key=
 
         evaluation_dictionary["Evaluation File List"] = {key:evasive_todo[modality][key] for key in evasive_todo[modality].keys() \
                                                             if audiodatasets.get_sentence_id(key) in sentence_ids[dataset_str]}
-    evaluation_dictionary["Evaluation Sample Size"] = 20
+    evaluation_dictionary["Evaluation Sample Size"] = 40
     evaluation_dictionary["Original Transcription Confidences"] = valid_confidences[modality]
     evaluation_dictionary["Evaluation Autoencoder Key"] = autoencoder_key
     evaluation_dictionary["Evaluation Classifier Modality"] = modality
@@ -377,11 +379,13 @@ def simple_run(runtime_str, modality="PURE", dataset_str="ALL", autoencoder_key=
     evaluation_dictionary["Original Softmax Values"] = original_softmax_values[modality]
     evaluation_dictionary["Temporary Directory"] = f'/tmp/bpt_{runtime_str}'
 
+#    gp.initialize_gp_environment(fitness_function=evaluation)
+
     if os.path.exists(f"{jar}/populations_{runtime_str}.pickle"):
         populations = pickle.load(open(f"{jar}/populations_{runtime_str}.pickle", 'rb'))
     else:
         populations, _ = gp.run_gp(starting_population=starting_population, number_of_generations=ngen)
-        pickle.dump(populations, open(f"{jar}/populations_{runtime_str}.pickle", 'wb'))
+        pickle.dump(list(populations), open(f"{jar}/populations_{runtime_str}.pickle", 'wb'))
 
     return populations    
 
@@ -399,7 +403,7 @@ def cascaded_run(runtime_str, modalities, dataset_strs, autoencoder_keys, target
             populations = simple_run(runtime_str, modality=modalities[run_indx], dataset_str=dataset_strs[run_indx], 
                                         autoencoder_key=autoencoder_keys[run_indx], target_class=target_classes[run_indx], 
                                         starting_population=start_pop, ngen=ngens[run_indx])
-            pickle.dump(populations, open(f"{jar}/populations_{runtime_str}_CASCADEINDX_{run_indx}.pickle", 'wb'))
+            pickle.dump(list(populations), open(f"{jar}/populations_{runtime_str}_CASCADEINDX_{run_indx}.pickle", 'wb'))
         start_pop = populations
 
     return populations
@@ -426,8 +430,7 @@ def main():
 
     if not (len(sys.argv) > 1 and os.path.exists(sys.argv[1])):
         print(f"usage: {argv[0]} <path to config file>") 
-        sys.exit(1)
-        
+
     config = json.load(open(sys.argv[1], 'r'))
 
     # Each key in config is a "job"
