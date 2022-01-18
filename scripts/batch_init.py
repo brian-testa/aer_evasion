@@ -37,8 +37,8 @@ import tensorflow as tf
 import tensorflow.keras as keras
 
 # Setup to import custom modules
-if not f'{os.getcwd()}/../scripts' in sys.path:
-    sys.path.append(f'{os.getcwd()}/../scripts')
+if not f'{os.path.dirname(os.path.realpath(__file__))}/../scripts' in sys.path:
+    sys.path.append(f'{os.path.dirname(os.path.realpath(__file__))}/../scripts')
 
 # Get text transcripts from audio files
 import transcription
@@ -63,9 +63,9 @@ import gp
 #####################################
 
 # Define some basic variables for this runtime
-jar = f'{os.getcwd()}/../pickles'
-model_dir = f'{os.getcwd()}/../models'
-data_dir = f'{os.getcwd()}/../data'
+jar = f'{os.path.dirname(os.path.realpath(__file__))}/../pickles'
+model_dir = f'{os.path.dirname(os.path.realpath(__file__))}/../models'
+data_dir = f'{os.path.dirname(os.path.realpath(__file__))}/../data'
 
 # Load the datasets; "pure" is digital data, "RECORDED" was played and recorded in our target environment E 
 ravdess_files = audiodatasets.list_audio_files(os.path.join(data_dir, 'fixed_ravdess'))
@@ -189,3 +189,4 @@ else:
     c = len(valid_transcripts[key])
     d = len(evasive_todo[key])
     print(f"Original {key} Dataset: {a} | Correctly Classified: {b} | Correctly Transcribed: {c} | Intersection: {d}")
+

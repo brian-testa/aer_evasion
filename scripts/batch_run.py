@@ -37,8 +37,8 @@ import tensorflow as tf
 import tensorflow.keras as keras
 
 # Setup to import custom modules
-if not f'{os.getcwd()}/../scripts' in sys.path:
-    sys.path.append(f'{os.getcwd()}/../scripts')
+if not f'{os.path.dirname(os.path.realpath(__file__))}/../scripts' in sys.path:
+    sys.path.append(f'{os.path.dirname(os.path.realpath(__file__))}/../scripts')
 
 # Get text transcripts from audio files
 import transcription
@@ -58,9 +58,9 @@ import classifiers
 # Genetic programming stuff
 import gp
 
-jar = f'{os.getcwd()}/../pickles'
-model_dir = f'{os.getcwd()}/../models'
-data_dir = f'{os.getcwd()}/../data'
+jar = f'{os.path.dirname(os.path.realpath(__file__))}/../pickles'
+model_dir = f'{os.path.dirname(os.path.realpath(__file__))}/../models'
+data_dir = f'{os.path.dirname(os.path.realpath(__file__))}/../data'
 
 
 ############################################################

@@ -12,8 +12,8 @@ import copy
 
 text_extractor = 'VOSK'
 vosk_model_path = f'{os.path.dirname(os.path.realpath(__file__))}/../lib/vosk_models/vosk-model-small-en-us-0.15'
-#vosk_model_path = f'{os.getcwd()}/../lib/vosk_models/vosk-model-en-us-daanzu-20200905'
-#vosk_model_path = f'{os.getcwd()}/../lib/vosk_models/vosk-model-en-us-daanzu-20200905-lgraph'
+#vosk_model_path = f'{os.path.dirname(os.path.realpath(__file__))}/../lib/vosk_models/vosk-model-en-us-daanzu-20200905'
+#vosk_model_path = f'{os.path.dirname(os.path.realpath(__file__))}/../lib/vosk_models/vosk-model-en-us-daanzu-20200905-lgraph'
 
 google_app_credentials = f'{os.path.dirname(os.path.realpath(__file__))}/../lib/MyFirstProject-fae4c18cf725.json'
 

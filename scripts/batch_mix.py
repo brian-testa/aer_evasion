@@ -42,8 +42,8 @@ import tensorflow as tf
 import tensorflow.keras as keras
 
 # Setup to import custom modules
-if not f'{os.getcwd()}/../scripts' in sys.path:
-    sys.path.append(f'{os.getcwd()}/../scripts')
+if not f'{os.path.dirname(os.path.realpath(__file__))}/../scripts' in sys.path:
+    sys.path.append(f'{os.path.dirname(os.path.realpath(__file__))}/../scripts')
 
 # Get text transcripts from audio files
 import transcription
