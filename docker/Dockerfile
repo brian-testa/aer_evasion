@@ -30,7 +30,8 @@ RUN pip3 install 'numpy==1.20' \
     'scikit-learn==0.23.1' \
     sklearn \
     deap \
-    playsound
+    playsound \
+    'h5py==2.10.0'
 
 # Load all of the necessary pieces from this distribution into the Docker image
 # Note that the data directory is not added...I map that as /data
