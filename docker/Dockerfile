@@ -8,6 +8,9 @@ USER root
 # /pickles contains pickles saved as we process a job
 VOLUME /data
 VOLUME /pickles
+VOLUME /scripts
+VOLUME /notebooks
+
 
 # Install all of the necessary packages
 RUN sudo apt-get -y update && apt-get install -y \
@@ -38,12 +41,14 @@ RUN pip3 install 'numpy==1.20' \
 # Note that the pickles directory is not added...I map that as /pickles
 
 RUN mkdir /workspace
+WORKDIR /workspace
+
+RUN ln -s /pickles pickles
+RUN ln -s /data data
+RUN ln -s /scripts scripts
+RUN ln -s /notebooks notebooks
 
 # See up-front materials. Assumes that certain downloads for 3rd-party datasets and VOSK model files have occured
 COPY . /workspace/
-
-WORKDIR /workspace
-RUN ln -s /pickles pickles
-RUN ln -s /data data
 
 CMD ["bash"]
